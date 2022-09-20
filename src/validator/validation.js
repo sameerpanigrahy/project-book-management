@@ -1,4 +1,4 @@
-const isValidMail = (/^([0-9a-z]([-\\.][0-9a-z]+))@([a-z]([-\\.][a-z]+))[\\.]([a-z]{2,20})+$/);
+const isValidMail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 
 const isValidName = (/^[a-zA-Z. ]{3,20}$/)
 
@@ -17,8 +17,13 @@ const isValidRequestBody = (value) => {
     return Object.keys(value).length > 0
 }
 
-const isValidMobile=/^[6-9]\d{9}$/gi;
+const isValidMobile=/^[6-9]{1}[0-9]{9}$/;
+
+const isValidPassword = function (value) {
+    if (  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(value) ) return true;
+    return false;
+  };
 
 module.exports = {
-    isValidMail, isValid, isValidName, isValidRequestBody,isValidfild,isValidMobile
+    isValidMail, isValid, isValidName, isValidRequestBody,isValidfild,isValidMobile,isValidPassword
 }
