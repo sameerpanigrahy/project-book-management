@@ -90,7 +90,7 @@ const loginUser = async function (req, res) {
             {
                 UserId: verifyUser._id.toString(),
                 iat: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60*3
+                exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60 * 3
             },
             "project-bookmanagment-group53"
         );

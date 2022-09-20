@@ -3,21 +3,25 @@ const userSchema = new mongoose.Schema({
     title: {
         type: String,
         enum: ["Mr", "Miss", "Mrs"],
-        required: true
+        required: true,
+        trim: true
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     phone: {
         type: String,
         required: true,
-        unique:true
+        unique: true,
+        trim: true
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true
     },
     password: {
         type: String,
@@ -28,6 +32,7 @@ const userSchema = new mongoose.Schema({
         city: String,
         pincode: String
     }
+
 }, { timestamps: true }
 )
 module.exports = mongoose.model('User', userSchema)

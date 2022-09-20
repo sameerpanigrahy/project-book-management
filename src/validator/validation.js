@@ -17,13 +17,13 @@ const isValidRequestBody = (value) => {
     return Object.keys(value).length > 0
 }
 
-const isValidMobile=/^[6-9]{1}[0-9]{9}$/;
+const isValidMobile = /^[6-9]{1}[0-9]{9}$/;
 
 const isValidPassword = function (value) {
-    if (  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(value) ) return true;
+    if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(value)) return true;
     return false;
-  };
+};
 
 module.exports = {
-    isValidMail, isValid, isValidName, isValidRequestBody,isValidfild,isValidMobile,isValidPassword
+    isValidMail, isValid, isValidName, isValidRequestBody, isValidfild, isValidMobile, isValidPassword
 }
