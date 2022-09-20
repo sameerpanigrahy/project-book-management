@@ -16,6 +16,7 @@ const createUser = async function (req, res) {
         if (!isValid(name)) return res.status(400).send({ status: false, message: "name is  required" })
         if (!isValid(email)) return res.status(400).send({ status: false, message: "mail id is required" })
         if (!isValid(phone)) return res.status(400).send({ status: false, message: "phone no. is required" })
+        if (!isValid(password)) return res.status(400).send({ status: false, message: "password is required" })
 
         if (!(["Mr", "Mrs", "Miss"].includes(title))) return res.status(406).send({
             status: false, msg: "you can use only [Mr, Mrs, Miss] in title"
@@ -28,7 +29,7 @@ const createUser = async function (req, res) {
 
         if (!isValidMail.test(email)) return res.status(406).send({
             status: false, msg: "email id is not valid",
-            ValidMail: "email must be contain ==> @  Number  ."
+            ValidMail: "email must be in for e.g. xyz@abc.com format."
         })
 
         if (!isValidMobile.test(phone)) return res.status(406).send({
@@ -42,9 +43,6 @@ const createUser = async function (req, res) {
         let uniqueEmail = await userModel.findOne({ email: email })
         if (uniqueEmail) return res.status(409).send({ status: false, message: "email Id Already Exists." })//(409)it is use for the conflict
 
-
-
-        if (!isValid(password)) return res.status(400).send({ status: false, message: "password is required" })
         if (!isValidPassword(password)) return res.status(406).send({
             status: false, message: "enter valid password  ",
             ValidPassWord: "passWord in between(8-15)& must be contain ==> upperCase,lowerCase,specialCharecter & Number"
@@ -58,16 +56,13 @@ const createUser = async function (req, res) {
                 //const validPin=(/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/)
                 if (!(/^\d{6}$/).test(address.pincode)) return res.status(400).send({ status: false, message: "please enter valied pincode " })
             }
-
         }
-
         const userData = {
             title, name, phone, email, password, address
         }
-
         let savedData = await userModel.create(userData)
         res.status(201).send({ status: true, message: "Success", data: savedData })
-
+        
     }
     catch (error) {
         res.status(500).send({ msg: error.message });
