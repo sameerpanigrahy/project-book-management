@@ -49,7 +49,7 @@ const createUser = async function (req, res) {
         })
 
         if (address) {
-            if (!isValidRequestBody(address)) return res.status(400).send({ status: false, msg: " address cant't be empty Please enter some data." })
+            if (!isValidRequestBody(address)) return res.status(400).send({ status: false, message: " address cant't be empty Please enter some data." })
 
             if (!isValidfild(address.street)) return res.status(400).send({ status: false, message: "please enter street " })
             if (!isValidfild(address.city)) return res.status(400).send({ status: false, message: "please enter city" })
@@ -90,17 +90,17 @@ const loginUser = async function (req, res) {
 
         let token = jwt.sign(
             {
-                UserId: verifyUser._id.toString()
+                userId: verifyUser._id.toString()
             },
             "project-bookmanagment-group53",
             {expiresIn:"24h"}
         );
-        res.status(201).send({ status: true, message: "You are successFully LogedIn", token: token })
+        res.status(201).send({ status: true, message: "You are successFully LogedIn", data: token })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
 };
 
-module.exports = { loginUser, createUser }
 
+module.exports = { loginUser, createUser }

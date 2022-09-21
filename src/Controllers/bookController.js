@@ -24,7 +24,12 @@ const createBook = async function (req, res) {
         if (!validUser) return res.status(400).send({ status: false, message: `user not found by this ${userId} userId ` })
 
         const unique = await bookModel.findOne({$or:[{ title: title }, {ISBN: ISBN }]})
-        if (unique) return res.status(409).send({ message: "jjjj" })
+        if (unique) {
+            if(unique.title==title){
+                 return res.status(409).send({ message: `${title} is  alrady exist` })
+            }else{   return res.status(409).send({ message: `${ISBN}:--This ISBN is alrady exist  ` })   }
+            
+        }
 
         if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
 
@@ -64,7 +69,7 @@ const getBooks = async function (req, res) {
         if (data.isDeleted == true) return res.status(404).send({ status: false, message: "you can't find deleted books" })
 
 
-        const books = await bookModel.find(getBook).select({ id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releaseAt: 1 }).sort({title:1})
+        const books = await bookModel.find(getBook).select({ __v:0,id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releaseAt: 1 }).sort({title:1})
         if (books.length == 0) return res.status(404).send({ status: false, message: "Book Not Found " }) 
 
         res.status(200).send({ status: true, message: "Books List", data: books })
@@ -82,13 +87,18 @@ const booksById = async function (req, res) {
     try {
         let id = req.params.bookId
 
-        if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, msg: "please enter a correct Id" })
+        if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct Id" })
 
-
-        const findBook = await bookModel.findById(id)
+const findById={
+    _id:id,
+    isDeleted:false
+}
+        const findBook = await bookModel.findOne(findById).select({__v:0})
         if (!findBook) return res.status(404).send({ status: false, message: "book's not found" })
-
-        res.status(200).send({ status:true,message:`I got This book by using this Id ==>>${id}`, Data: findBook })
+        if(findBook.reviews==0){
+        findBook._doc["reviewsData"]=[]
+    }
+        res.status(200).send({ status:true,message:`I got This book by using this Id ==>>${id}`, Data:findBook })
 
     } catch (error) {
         res.status(500).send({ status: false, message: message.err })
