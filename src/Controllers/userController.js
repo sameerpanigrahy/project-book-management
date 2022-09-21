@@ -49,12 +49,14 @@ const createUser = async function (req, res) {
         })
 
         if (address) {
+            if (!isValidRequestBody(address)) return res.status(400).send({ status: false, msg: " address cant't be empty Please enter some data." })
+
             if (!isValidfild(address.street)) return res.status(400).send({ status: false, message: "please enter street " })
             if (!isValidfild(address.city)) return res.status(400).send({ status: false, message: "please enter city" })
             if (!isValidfild(address.pincode)) return res.status(400).send({ status: false, message: "please enter pincode" })
             if (address.pincode) {
-                //const validPin=(/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/)
-                if (!(/^\d{6}$/).test(address.pincode)) return res.status(400).send({ status: false, message: "please enter valied pincode " })
+                
+                if (!(/^[1-9][0-9]{5}$/).test(address.pincode)) return res.status(400).send({ status: false, message: "please enter valied pincode " })
             }
         }
         const userData = {
@@ -65,7 +67,7 @@ const createUser = async function (req, res) {
         
     }
     catch (error) {
-        res.status(500).send({ msg: error.message });
+        res.status(500).send({status:false, message: error.message });
     }
 };
 
@@ -83,21 +85,20 @@ const loginUser = async function (req, res) {
 
         let verifyUser = await userModel.findOne({ email: email, password: password })
         if (!verifyUser) {
-            return res.status(400).send({ status: false, msg: "email or password is incorrect" })
+            return res.status(400).send({ status: false, message: "email or password is incorrect" })
         }
 
         let token = jwt.sign(
             {
-                UserId: verifyUser._id.toString(),
-                iat: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60 * 3
+                UserId: verifyUser._id.toString()
             },
-            "project-bookmanagment-group53"
+            "project-bookmanagment-group53",
+            {expiresIn:"24h"}
         );
-        res.status(201).send({ status: true, msg: "You are successFully LogedIn", token: token })
+        res.status(201).send({ status: true, message: "You are successFully LogedIn", token: token })
     }
     catch (error) {
-        return res.status(500).send({ status: false, msg: error.message })
+        return res.status(500).send({ status: false, message: error.message })
     }
 };
 
