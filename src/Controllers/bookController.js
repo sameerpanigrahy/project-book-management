@@ -142,7 +142,7 @@ const updateBook = async function (req, res) {
     const bookUser=await bookModel.findById(id)
 
     const authUserId=req.authUser
-    if(authUserId!=bookUser.userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+    if(authUserId!=bookUser.userId)  return res.status(403).send({status:false,message:" UnAuthorized User"})
 
     //----------------------------Authorization------------------------//
             
@@ -190,7 +190,7 @@ const deleteBook = async function (req, res) {
         //------------------------------Authorization----------------------//
     
     const authUserId=req.authUser
-    if(authUserId!=bookVerify.userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+    if(authUserId!=bookVerify.userId)  return res.status(403).send({status:false,message:" UnAuthorized User"})
 
     //----------------------------Authorization------------------------//
             
