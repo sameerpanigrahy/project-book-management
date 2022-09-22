@@ -27,7 +27,8 @@ const isValidPassword = function (value) {
 const validISBN = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
 const validDate = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/
+const validRating=/^[+]?([0-4]*\.[0-9]+|[0-5])$/
 
 module.exports = {
-    isValidMail, isValid, isValidName, isValidRequestBody, isValidfild, isValidMobile, isValidPassword, validISBN, validDate
+    isValidMail, isValid, isValidName, isValidRequestBody, isValidfild, isValidMobile, isValidPassword, validISBN, validDate,validRating
 }

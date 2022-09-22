@@ -1,5 +1,6 @@
 const bookModel = require("../models/bookModel")
 const userModel = require("../models/userModel")
+const reviewModel = require("../models/reviewModel")
 const mongoose = require('mongoose')
 
 const { isValid, isValidRequestBody, validDate, validISBN } = require("../validator/validation")
@@ -18,8 +19,7 @@ const createBook = async function (req, res) {
         if (!isValid(ISBN)) return res.status(400).send({ status: false, message: " ISBN is required" })
         if (!isValid(category)) return res.status(400).send({ status: false, message: "category is required" })
         if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "subcategory is required" })
-        if (!isValid(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt is required" })
-
+        
         if (!mongoose.isValidObjectId(userId)) return res.status(406).send({ status: false, message: "userId is not in correct format" })
         const validUser = await userModel.findById(userId)
         if (!validUser) return res.status(400).send({ status: false, message: `user not found by this ${userId} userId ` })
@@ -34,12 +34,14 @@ const createBook = async function (req, res) {
 
         if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
 
-        if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
+        if(releasedAt){
+            if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
+        }else{  data["reviewedAt"]=moment().format('YYYY MM DD')}
 
         if (reviews) return res.status(406).send({ status: false, message: 'default value of reviews is 0 while book registering' })
 
 
-        if (isDeleted == true) return res.status(400).send({ status: false, message: "you can't delete a blog while creating" })
+        if (isDeleted == true) return res.status(400).send({ status: false, message: "you can't delete a book while creating" })
 
         const book = await bookModel.create(data)
         res.status(201).send({ status: true, message: "Boook successfully created", data: book })
@@ -105,9 +107,12 @@ const booksById = async function (req, res) {
         }
         const findBook = await bookModel.findOne(findById).select({ __v: 0 })
         if (!findBook) return res.status(404).send({ status: false, message: "book's not found" })
-        if (findBook.reviews == 0) {
-            findBook._doc["reviewsData"] = []
-        }
+            const findreviews = await reviewModel.find({bookId:findById})
+        if (findBook.reviews != 0) {
+            findBook._doc["reviewsData"] = findreviews
+        }else{
+             findBook._doc["reviewsData"] = []  
+            }
         res.status(200).send({ status: true, message: `I got This book by using this Id ==>>${id}`, Data: findBook })
 
     } catch (error) {
@@ -116,5 +121,26 @@ const booksById = async function (req, res) {
 
 }
 
+const deleteBook = async function (req, res) {
+    try {
+        let bookId = req.params.bookId
 
-module.exports = { createBook, getBooks, booksById }
+        if(!mongoose.isValidObjectId(bookId)){return res.status(400).send({ status: false, msg: "bookId is not in correct format"})}
+
+        let bookVerify = await bookModel.findById(bookId)
+        if (!bookVerify) {
+            return res.status(404).send({ status: false, msg: "Invalid BookId" })
+        }
+        if (bookVerify.isDeleted) {
+            return res.status(404).send({ status: false, msg: "Book already deleted" })
+        }
+
+        let record = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
+        res.status(200).send({ status: true, message: "Book Deleted successfully", data: record })
+    }
+    catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
+module.exports = { createBook, getBooks, booksById,deleteBook }
