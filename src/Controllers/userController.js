@@ -55,7 +55,7 @@ const createUser = async function (req, res) {
             if (!isValidfild(address.city)) return res.status(400).send({ status: false, message: "please enter city" })
             if (!isValidfild(address.pincode)) return res.status(400).send({ status: false, message: "please enter pincode" })
             if (address.pincode) {
-                
+
                 if (!(/^[1-9][0-9]{5}$/).test(address.pincode)) return res.status(400).send({ status: false, message: "please enter valied pincode " })
             }
         }
@@ -64,10 +64,10 @@ const createUser = async function (req, res) {
         }
         let savedData = await userModel.create(userData)
         res.status(201).send({ status: true, message: "Success", data: savedData })
-        
+
     }
     catch (error) {
-        res.status(500).send({status:false, message: error.message });
+        res.status(500).send({ status: false, message: error.message });
     }
 };
 
@@ -93,7 +93,7 @@ const loginUser = async function (req, res) {
                 userId: verifyUser._id.toString()
             },
             "project-bookmanagment-group53",
-            {expiresIn:"24h"}
+            { expiresIn: "24h" }
         );
         res.status(201).send({ status: true, message: "You are successFully LogedIn", data: token })
     }
