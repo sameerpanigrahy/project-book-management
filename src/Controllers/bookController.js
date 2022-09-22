@@ -2,6 +2,7 @@ const bookModel = require("../models/bookModel")
 const userModel = require("../models/userModel")
 const reviewModel = require("../models/reviewModel")
 const mongoose = require('mongoose')
+const moment=require('moment')
 
 const { isValid, isValidRequestBody, validDate, validISBN } = require("../validator/validation")
 
@@ -121,6 +122,48 @@ const booksById = async function (req, res) {
 
 }
 
+
+const updateBook = async function(req, res){
+    try {
+        
+        const data = req.body
+        const {title, excerpt, releasedAt, ISBN} = data
+        
+    let id = req.params.bookId
+
+    if (id) {
+        if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
+    }
+
+    if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: " body cant't be empty Please enter some data." })
+    
+    if (!isValid(ISBN)) return res.status(400).send({ status: false, message: " ISBN is required" })
+    if (!isValid(title)) return res.status(400).send({ status: false, message: "Title is required" })
+    
+    const unique = await bookModel.findOne({ $or: [{ title: title }, { ISBN: ISBN }] })
+    
+    if (unique) {
+        if (unique.title == title) {
+            return res.status(409).send({ message: `${title} is  alrady exist` })
+        } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is alrady exist  ` }) } }
+    
+        if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
+
+        if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
+    
+        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "excerpt is  required" })
+    
+        const newUpdate = await bookModel.findOneAndUpdate({bookId:id ,isDeleted:false}, {$set: {title:title, excerpt:excerpt, releasedAt:releasedAt, ISBN:ISBN }}, {new:true})
+
+if(!newUpdate) {return res.status(404).send({status:false, message:"book not found so can't update anything"})}
+
+res.status(201).send({status:true, message:"updated successfully", data:newUpdate})
+
+} catch (error) {
+    res.status(500).send({ status: false, message: error.message })   
+}
+}
+
 const deleteBook = async function (req, res) {
     try {
         let bookId = req.params.bookId
@@ -143,4 +186,4 @@ const deleteBook = async function (req, res) {
     }
 }
 
-module.exports = { createBook, getBooks, booksById,deleteBook }
+module.exports = { createBook, getBooks, booksById,updateBook,deleteBook }
