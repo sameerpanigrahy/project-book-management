@@ -16,8 +16,8 @@ const createBook = async function (req, res) {
 
         //------------------------------Authorization----------------------//
 
-        const authUserId=req.authUser
-        if(authUserId!=userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+        const authUserId = req.authUser
+        if (authUserId != userId) return res.status(403).send({ status: false, message: `${userId} This ID is not authorized` })
 
         //----------------------------Authorization------------------------//
         if (!isValid(title)) return res.status(400).send({ status: false, message: "Title is required" })
@@ -136,22 +136,26 @@ const updateBook = async function (req, res) {
         const data = req.body
         const { title, excerpt, releasedAt, ISBN } = data
 
-        let id = req.params.bookId    
-            if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
-    //------------------------------Authorization----------------------//
-    const bookUser=await bookModel.findById(id)
+        let id = req.params.bookId
+        if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
+        //------------------------------Authorization----------------------//
+        const bookUser = await bookModel.findById(id)
 
-    const authUserId=req.authUser
-    if(authUserId!=bookUser.userId)  return res.status(403).send({status:false,message:" UnAuthorized User"})
+        const authUserId = req.authUser
+        if (authUserId != bookUser.userId) return res.status(403).send({ status: false, message: " UnAuthorized User" })
 
-    //----------------------------Authorization------------------------//
-            
+        //----------------------------Authorization------------------------//
+
 
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: " body cant't be empty Please enter some data." })
 
         if (!isValidfild(ISBN)) return res.status(400).send({ status: false, message: " ISBN is required" })
         if (!isValidfild(title)) return res.status(400).send({ status: false, message: "Title is required" })
         if (!isValidfild(excerpt)) return res.status(400).send({ status: false, message: "excerpt is  required" })
+
+        if (ISBN) {
+            if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
+        }
 
         const unique = await bookModel.findOne({ $or: [{ title: title }, { ISBN: ISBN }] })
 
@@ -161,7 +165,6 @@ const updateBook = async function (req, res) {
             } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is alrady exist  ` }) }
         }
 
-        if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
         if (releasedAt) {
             if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
         }
@@ -188,19 +191,19 @@ const deleteBook = async function (req, res) {
             return res.status(404).send({ status: false, msg: "Invalid BookId" })
         }
         //------------------------------Authorization----------------------//
-    
-    const authUserId=req.authUser
-    if(authUserId!=bookVerify.userId)  return res.status(403).send({status:false,message:" UnAuthorized User"})
 
-    //----------------------------Authorization------------------------//
-            
+        const authUserId = req.authUser
+        if (authUserId != bookVerify.userId) return res.status(403).send({ status: false, message: " UnAuthorized User" })
+
+        //----------------------------Authorization------------------------//
+
 
         if (bookVerify.isDeleted) {
             return res.status(404).send({ status: false, msg: "Book already deleted" })
         }
 
         let record = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
-        res.status(200).send({ status: true, message: "Book Deleted successfully", data: record })
+        res.status(200).send({ status: true, message: "Book Deleted successfully" })
     }
     catch (err) {
         res.status(500).send({ status: false, msg: err.message })
