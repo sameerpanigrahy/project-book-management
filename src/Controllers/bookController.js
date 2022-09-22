@@ -14,6 +14,12 @@ const createBook = async function (req, res) {
 
         const { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt } = data
 
+        //------------------------------Authorization----------------------//
+
+        const authUserId=req.authUser
+        if(authUserId!=userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+
+        //----------------------------Authorization------------------------//
         if (!isValid(title)) return res.status(400).send({ status: false, message: "Title is required" })
         if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "excerpt is  required" })
         if (!isValid(userId)) return res.status(400).send({ status: false, message: "userId id is required" })
@@ -130,11 +136,16 @@ const updateBook = async function (req, res) {
         const data = req.body
         const { title, excerpt, releasedAt, ISBN } = data
 
-        let id = req.params.bookId
-
-        if (id) {
+        let id = req.params.bookId    
             if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
-        }
+    //------------------------------Authorization----------------------//
+    const bookUser=await bookModel.findById(id)
+
+    const authUserId=req.authUser
+    if(authUserId!=bookUser.userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+
+    //----------------------------Authorization------------------------//
+            
 
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: " body cant't be empty Please enter some data." })
 
@@ -176,6 +187,14 @@ const deleteBook = async function (req, res) {
         if (!bookVerify) {
             return res.status(404).send({ status: false, msg: "Invalid BookId" })
         }
+        //------------------------------Authorization----------------------//
+    
+    const authUserId=req.authUser
+    if(authUserId!=bookVerify.userId)  return res.status(403).send({status:false,message:`${userId} This ID is not authorized`})
+
+    //----------------------------Authorization------------------------//
+            
+
         if (bookVerify.isDeleted) {
             return res.status(404).send({ status: false, msg: "Book already deleted" })
         }

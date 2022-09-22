@@ -95,7 +95,7 @@ const loginUser = async function (req, res) {
             "project-bookmanagment-group53",
             { expiresIn: "24h" }
         );
-        res.status(201).send({ status: true, message: "You are successFully LogedIn", data: token })
+        res.status(201).send({ status: true, message: "You are successFully LogedIn", data:{token:token,userId:verifyUser["_id"]} })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
