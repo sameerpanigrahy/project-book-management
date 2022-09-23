@@ -17,8 +17,9 @@ try {
 
         const { reviewedBy,reviewedAt,rating,review,isDeleted} = data
          data["bookId"]=bookId
-        
+        if(reviewedBy){
         if (!isValidfild(reviewedBy)) return res.status(400).send({ status: false, message: "viewer can't be a empty String" })
+        }else{ data["reviewedBy"]='Guest' }
         if (!isValid(rating)) return res.status(400).send({ status: false, message: "rating is  required" })
         if (!isValidfild(review)) return res.status(400).send({ status: false, message: "review can't be a empty String " })
                                  
@@ -40,10 +41,10 @@ try {
 
         if (isDeleted == true) return res.status(400).send({ status: false, message: "you can't delete a review while creating" })
 
-      const reviewDta= await reviewModel.create(data)
+      const reviewData= await reviewModel.create(data)
       let updatebook=await bookModel.findByIdAndUpdate({_id:bookId},{$inc:{reviews:+1}},{new:true})
-
-      res.status(201).send({status:true,message:"you review Was recorded",data:reviewDta})
+       updatebook._doc["reviewData"]=reviewData
+      res.status(201).send({status:true,message:"you review Was recorded",data:updatebook})
 
 } catch (error) {
     res.status(500).send({status:false,message:error.message})

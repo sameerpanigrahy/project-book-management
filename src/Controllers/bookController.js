@@ -115,7 +115,7 @@ const booksById = async function (req, res) {
         }
         const findBook = await bookModel.findOne(findById).select({ __v: 0 })
         if (!findBook) return res.status(404).send({ status: false, message: "book's not found" })
-        const findreviews = await reviewModel.find({ bookId: findById })
+        const findreviews = await reviewModel.find({ bookId: findById ,isDeleted: false})
         if (findBook.reviews != 0) {
             findBook._doc["reviewsData"] = findreviews
         } else {
