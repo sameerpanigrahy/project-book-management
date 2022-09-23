@@ -9,7 +9,7 @@ const { isValid, isValidRequestBody,isValidfild,isValidName, validDate,validRati
 const createReview = async function (req, res) {
 try {
     const bookId=req.params.bookId
-                         
+                          
     if (!mongoose.isValidObjectId(bookId)) return res.status(406).send({ status: false, message: `${bookId} This bookId is not ObjectId type` })
 
     const data = req.body
@@ -24,7 +24,7 @@ try {
         if(reviewedBy){
             if (!isValidName.test(reviewedBy)) return res.status(406).send({
                 status: false, msg: "Enter a valid reviewer Name",
-                validname: "length of name has to be in between (3-20)  , use only String "
+                validname: "length of name has to be in between (3-20), use only String"
             })
         }else{ data["reviewedBy"]='Guest' }
         if (!isValid(rating)) return res.status(400).send({ status: false, message: "rating is  required" })

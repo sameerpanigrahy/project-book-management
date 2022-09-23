@@ -38,16 +38,18 @@ const createUser = async function (req, res) {
         })
 
         let uniquePhone = await userModel.findOne({ phone: phone })
-        if (uniquePhone) return res.status(409).send({ status: false, message: "phone no. Already Exists." })//(409)it is use for the conflict
+        if (uniquePhone) return res.status(400).send({ status: false, message: "phone no. Already Exists." })//(409)it is use for the conflict
 
         let uniqueEmail = await userModel.findOne({ email: email })
-        if (uniqueEmail) return res.status(409).send({ status: false, message: "email Id Already Exists." })//(409)it is use for the conflict
+        if (uniqueEmail) return res.status(400).send({ status: false, message: "email Id Already Exists." })//(409)it is use for the conflict
 
         if (!isValidPassword(password)) return res.status(406).send({
             status: false, message: "enter valid password  ",
             ValidPassWord: "passWord in between(8-15)& must be contain ==> upperCase,lowerCase,specialCharecter & Number"
         })
-
+        
+        //if(Object.keys(data.address).length==0) return res.status(400).send({ status: false, message: "Address cannot be empty String & number" });
+        //if (typeof data.address !="object") return res.status(400).send({ status: false, msg: "Address body  should be in object form" });
         if (address) {
             if (!isValidRequestBody(address)) return res.status(400).send({ status: false, message: " address cant't be empty Please enter some data." })
 

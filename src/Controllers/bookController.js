@@ -6,7 +6,6 @@ const moment = require('moment')
 
 const { isValid, isValidRequestBody, validDate, validISBN, isValidfild } = require("../validator/validation")
 
-
 const createBook = async function (req, res) {
     try {
         const data = req.body
@@ -35,9 +34,9 @@ const createBook = async function (req, res) {
 
         const unique = await bookModel.findOne({ $or: [{ title: title }, { ISBN: ISBN }] })
         if (unique) {
-            if (unique.title == title) {
-                return res.status(409).send({ message: `${title} is  already exist` })
-            } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is already exist  ` }) }
+            if (unique.title == title.trim()) {
+                return res.status(400).send({ message: `${title} is  already exist` }) //instead of 400 we can also use 409 for conflict
+            } else { return res.status(400).send({ message: `${ISBN}:--This ISBN is already exist  ` }) } //instead of 400 we can also use 409 for conflict
 
         }
 
@@ -147,7 +146,7 @@ const updateBook = async function (req, res) {
 
         //----------------------------Authorization------------------------//
 
-
+        
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: " body cant't be empty Please enter some data." })
 
         if (!isValidfild(ISBN)) return res.status(400).send({ status: false, message: " ISBN is required" })
@@ -161,9 +160,9 @@ const updateBook = async function (req, res) {
         const unique = await bookModel.findOne({ $or: [{ title: title }, { ISBN: ISBN }] })
 
         if (unique) {
-            if (unique.title == title) {
-                return res.status(409).send({ message: `${title} is  alrady exist` })
-            } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is alrady exist  ` }) }
+            if (unique.title == title.trim()) {
+                return res.status(400).send({ message: `${title} is  alrady exist` })
+            } else { return res.status(400).send({ message: `${ISBN}:--This ISBN is alrady exist  ` }) }
         }
 
         if (releasedAt) {
