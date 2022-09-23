@@ -140,6 +140,7 @@ const updateBook = async function (req, res) {
         if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
         //------------------------------Authorization----------------------//
         const bookUser = await bookModel.findById(id)
+        if(!bookUser)  return res.status(404).send({ status: false, msg: "Invalid BookId" })
 
         const authUserId = req.authUser
         if (authUserId != bookUser.userId) return res.status(403).send({ status: false, message: " UnAuthorized User" })
