@@ -36,7 +36,7 @@ try {
             if (!validDate.test(reviewedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
         }else{  data["reviewedAt"]=moment().format('YYYY MM DD')}
 
-        if(!validRating.test(rating) ) return res.status(400).send({ status: false, message: `${rating} This was not a valied rating,rating this book in between 0-5 ` })
+        if(!validRating.test(rating) ) return res.status(400).send({ status: false, message: `${rating} This was not a valied rating,rating this book in between 1-5 ` })
 
 
         if (isDeleted == true) return res.status(400).send({ status: false, message: "you can't delete a review while creating" })

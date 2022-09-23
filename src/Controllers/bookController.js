@@ -115,7 +115,7 @@ const booksById = async function (req, res) {
         }
         const findBook = await bookModel.findOne(findById).select({ __v: 0 })
         if (!findBook) return res.status(404).send({ status: false, message: "book's not found" })
-        const findreviews = await reviewModel.find({ bookId: findById ,isDeleted: false})
+        const findreviews = await reviewModel.find({ bookId: findById, isDeleted: false })
         if (findBook.reviews != 0) {
             findBook._doc["reviewsData"] = findreviews
         } else {
@@ -140,7 +140,7 @@ const updateBook = async function (req, res) {
         if (!mongoose.isValidObjectId(id)) return res.status(400).send({ status: false, message: "please enter a correct userId" })
         //------------------------------Authorization----------------------//
         const bookUser = await bookModel.findById(id)
-        if(!bookUser)  return res.status(404).send({ status: false, msg: "Invalid BookId" })
+        if (!bookUser) return res.status(404).send({ status: false, msg: "Invalid BookId" })
 
         const authUserId = req.authUser
         if (authUserId != bookUser.userId) return res.status(403).send({ status: false, message: " UnAuthorized User" })
