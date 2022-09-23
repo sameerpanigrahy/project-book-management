@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { loginUser, createUser } = require('../controllers/userController')
 const { createBook, getBooks, booksById,updateBook,deleteBook } = require("../Controllers/bookController")
-const {createReview}  =require("../Controllers/reviewController")
+const {createReview,updateReview,deleteReview}  =require("../Controllers/reviewController")
 const { authenticate } = require("../middlewares/auth")
 
 
@@ -32,7 +32,8 @@ router.put('/books/:bookId', authenticate, updateBook)
 
 
 router.post('/books/:bookId/review',createReview)
-
+router.put('/books/:bookId/review/:reviewId',updateReview)
+router.delete('/books/:bookId/review/:reviewId',deleteReview)
 
 
 
