@@ -48,10 +48,12 @@ const createUser = async function (req, res) {
             ValidPassWord: "passWord in between(8-15)& must be contain ==> upperCase,lowerCase,specialCharecter & Number"
         })
         
-        //if(Object.keys(data.address).length==0) return res.status(400).send({ status: false, message: "Address cannot be empty String & number" });
-        //if (typeof data.address !="object") return res.status(400).send({ status: false, msg: "Address body  should be in object form" });
+        if (!isValidfild(address)) return res.status(400).send({ status: false, message: "Address cannot be empty String" })
+
         if (address) {
+            if (typeof address !="object") return res.status(400).send({ status: false, message: "Address body  should be in object form" });
             if (!isValidRequestBody(address)) return res.status(400).send({ status: false, message: " address cant't be empty Please enter some data." })
+
 
             if (!isValidfild(address.street)) return res.status(400).send({ status: false, message: "please enter street " })
             if (!isValidfild(address.city)) return res.status(400).send({ status: false, message: "please enter city" })
