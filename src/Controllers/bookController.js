@@ -31,19 +31,19 @@ const createBook = async function (req, res) {
         const validUser = await userModel.findById(userId)
         if (!validUser) return res.status(400).send({ status: false, message: `user not found by this ${userId} userId ` })
 
-        if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Plese enter valid ISBN' })
+        if (!validISBN.test(ISBN)) return res.status(406).send({ status: false, message: 'Please enter valid ISBN' })
 
         const unique = await bookModel.findOne({ $or: [{ title: title }, { ISBN: ISBN }] })
         if (unique) {
             if (unique.title == title) {
-                return res.status(409).send({ message: `${title} is  alrady exist` })
-            } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is alrady exist  ` }) }
+                return res.status(409).send({ message: `${title} is  already exist` })
+            } else { return res.status(409).send({ message: `${ISBN}:--This ISBN is already exist  ` }) }
 
         }
 
 
         if (releasedAt) {
-            if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Plese enter a  release Date YYYY-MM-DD format' })
+            if (!validDate.test(releasedAt)) return res.status(406).send({ status: false, message: 'Please enter a  release Date YYYY-MM-DD format' })
         } else { data["releasedAt"] = moment().format('YYYY MM DD') }
 
         if (reviews) return res.status(406).send({ status: false, message: 'default value of reviews is 0 while book registering' })

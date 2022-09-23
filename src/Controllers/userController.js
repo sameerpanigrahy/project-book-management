@@ -77,11 +77,11 @@ const loginUser = async function (req, res) {
     try {
         if (!isValidRequestBody(req.body)) return res.status(400).send({ status: false, message: "request body can't be empty enter some data." })
         let email = req.body.email
-        if (!email) return res.status(400).send({ status: false, msg: "email required" })
-        if (!isValidMail.test(email)) return res.status(400).send({ status: false, msg: "enter a valied email" })
+        if (!email) return res.status(400).send({ status: false, message: "email required" })
+        if (!isValidMail.test(email)) return res.status(400).send({ status: false, message: "enter a valid email" })
 
         let password = req.body.password
-        if (!isValid(password)) return res.status(400).send({ status: false, msg: "password is required" })
+        if (!isValid(password)) return res.status(400).send({ status: false, message: "password is required" })
 
         let verifyUser = await userModel.findOne({ email: email, password: password })
         if (!verifyUser) {
