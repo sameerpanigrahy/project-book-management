@@ -120,7 +120,7 @@ const booksById = async function (req, res) {
         } else {
             findBook._doc["reviewsData"] = []
         }
-        res.status(200).send({ status: true, message: `I got This book by using this Id ==>>${id}`, Data: findBook })
+        res.status(200).send({ status: true, message: `I got This book by using this Id ==>>${id}`, data: findBook })
 
     } catch (error) {
         res.status(500).send({ status: false, message: error.message })
@@ -173,7 +173,7 @@ const updateBook = async function (req, res) {
 
         if (!newUpdate) { return res.status(404).send({ status: false, message: "book not found so can't update anything" }) }
 
-        res.status(201).send({ status: true, message: "updated successfully", data: newUpdate })
+        res.status(200).send({ status: true, message: "updated successfully", data: newUpdate })
 
     } catch (error) {
         res.status(500).send({ status: false, message: error.message })

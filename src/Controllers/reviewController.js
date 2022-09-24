@@ -42,7 +42,7 @@ try {
 
       const reviewData= await reviewModel.create(data)
       let updatebook=await bookModel.findByIdAndUpdate({_id:bookId},{$inc:{reviews:+1}},{new:true})
-       updatebook._doc["reviewData"]=reviewData
+       updatebook._doc["reviewsData"]=reviewData
       res.status(201).send({status:true,message:"you review Was recorded",data:updatebook})
 
 } catch (error) {
