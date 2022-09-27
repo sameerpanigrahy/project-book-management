@@ -80,7 +80,7 @@ const getBooks = async function (req, res) {
 
 
 
-        const books = await bookModel.find(getBook).select({ id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releaseAt: 1 })
+        const books = await bookModel.find(getBook).select({ id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 })
         books.sort((a, b) => {
             let fa = a.title.toLowerCase()
             fb = b.title.toLowerCase()
