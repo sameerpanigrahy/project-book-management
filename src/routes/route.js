@@ -4,6 +4,7 @@ const { loginUser, createUser } = require('../controllers/userController')
 const { createBook, getBooks, booksById,updateBook,deleteBook } = require("../Controllers/bookController")
 const {createReview,updateReview,deleteReview}  =require("../Controllers/reviewController")
 const { authenticate } = require("../middlewares/auth")
+const {getImage}=require("../Controllers/aws3")
 
 
 //..............................Test API.........................//
@@ -27,7 +28,7 @@ router.get('/books', authenticate, getBooks)
 router.get('/books/:bookId', authenticate, booksById)
 router.delete('/books/:bookId',authenticate, deleteBook)
 router.put('/books/:bookId', authenticate, updateBook)
-
+router.post("/write-file-aws",getImage)
 //...................................Review API..........................................//
 
 

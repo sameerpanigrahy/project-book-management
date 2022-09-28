@@ -93,11 +93,9 @@ const loginUser = async function (req, res) {
         }
 
         let token = jwt.sign(
-            {
-                userId: verifyUser._id.toString()
-            },
+            {userId:verifyUser._id.toString()},
             "project-bookmanagment-group53",
-            { expiresIn: "24h" }
+             { expiresIn: "24h" }
         );
         res.status(201).send({ status: true, message: "You are successFully LogedIn", data:{token:token,userId:verifyUser["_id"]} })
     }

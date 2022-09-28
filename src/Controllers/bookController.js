@@ -11,7 +11,7 @@ const createBook = async function (req, res) {
         const data = req.body
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, message: " body cant't be empty Please enter some data." })
 
-        const { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt } = data
+        const { title, excerpt, userId, ISBN, category, subcategory, reviews, isDeleted, releasedAt ,bookCover} = data
 
         //------------------------------Authorization----------------------//
 
@@ -25,6 +25,7 @@ const createBook = async function (req, res) {
         if (!isValid(ISBN)) return res.status(400).send({ status: false, message: " ISBN is required" })
         if (!isValid(category)) return res.status(400).send({ status: false, message: "category is required" })
         if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "subcategory is required" })
+        if (!isValid(bookCover)) return res.status(400).send({ status: false, message: "subcategory is required" })
 
         if (!mongoose.isValidObjectId(userId)) return res.status(406).send({ status: false, message: "userId is not in correct format" })
         const validUser = await userModel.findById(userId)
