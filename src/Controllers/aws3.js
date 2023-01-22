@@ -30,8 +30,6 @@ let uploadFile= async ( file) =>{
     })
 
 
-    
-
    })
 }
 

@@ -3,14 +3,14 @@ const route = require('./routes/route.js');
 const mongoose = require('mongoose');
 const app = express();
 const multer=require("multer")
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 
 app.use(express.json());
 
 app.use(multer().any())
 
 
-mongoose.connect("mongodb+srv://princekumar-2:ZNmRphvSvecrtzBV@cluster0.yibukmr.mongodb.net/Group-53?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://panigrahisameer_200:iklsSoxrtvpy4JOK@cluster0.kyd9m93.mongodb.net/BookManagement", {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"), err => console.log(err))
